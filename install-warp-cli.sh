@@ -16,6 +16,7 @@ elif [[ -f /usr/lib/os-release ]]; then
     release=$ID
 else
     echo "Failed to check the system OS, please contact the author!" >&2
+    rm -- "$0"
     exit 1
 fi
 
@@ -48,19 +49,7 @@ function confirm() {
 }
 
 # check root
-[[ $EUID -ne 0 ]] && LOGE "ERROR: You must be root to run this script! \n" && exit 1
-
-# Check OS and set release variable
-if [[ -f /etc/os-release ]]; then
-    source /etc/os-release
-    release=$ID
-elif [[ -f /usr/lib/os-release ]]; then
-    source /usr/lib/os-release
-    release=$ID
-else
-    echo "Failed to check the system OS, please contact the author!" >&2
-    exit 1
-fi
+[[ $EUID -ne 0 ]] && LOGE "ERROR: You must be root to run this script! \n" && rm -- "$0" && exit 1
 
 echo "The OS release is: $release"
 
@@ -70,7 +59,7 @@ already_installed=0
 
 if [[ "${release}" == "centos" ]]; then
     if [[ ${os_version} -lt 8 ]]; then
-        echo -e "${red} Please use CentOS 8 or higher ${plain}\n" && exit 1
+        echo -e "${red} Please use CentOS 8 or higher ${plain}\n" && rm -- "$0" && exit 1
     fi
     if [ "$(command -v warp-cli)" ]; then
         already_installed=1
@@ -84,7 +73,7 @@ if [[ "${release}" == "centos" ]]; then
 	fi
 elif [[ "${release}" == "ubuntu" ]]; then
     if [[ ${os_version} -lt 2004 ]]; then
-        echo -e "${red} Please use Ubuntu 20 or higher version!${plain}\n" && exit 1
+        echo -e "${red} Please use Ubuntu 20 or higher version!${plain}\n" && rm -- "$0" && exit 1
     fi
     if [ "$(command -v warp-cli)" ]; then
         already_installed=1
@@ -99,7 +88,7 @@ elif [[ "${release}" == "ubuntu" ]]; then
 	fi
 elif [[ "${release}" == "debian" ]]; then
     if [[ ${os_version} -lt 10 ]]; then
-        echo -e "${red} Please use Debian 11 or higher ${plain}\n" && exit 1
+        echo -e "${red} Please use Debian 11 or higher ${plain}\n" && rm -- "$0" && exit 1
     fi
     if [ "$(command -v warp-cli)" ]; then
         already_installed=1
@@ -122,6 +111,7 @@ else
     echo "- Ubuntu 20.04+"
     echo "- Debian 10+"
     echo "- CentOS 8+"
+    rm -- "$0"
     exit 1
 fi
 
@@ -136,6 +126,7 @@ if [[ "${already_installed}" == 1 ]]; then
 		warp-cli --accept-tos registration delete
 	else 
 		echo -e "\n${green}[INF] Exiting... ${plain}"
+  		rm -- "$0"
 		exit 1
 	fi
 else 
@@ -166,6 +157,7 @@ if [[ "${already_installed}" == 0 ]] || [[ "${continue_setup}" == 1 ]]; then
 		LOGE "YOU DON'T NEED TO OPEN 30000 PORT!!!"
 	else
 		LOGE "warp-cli can't be found. Looks like, the installation was unseccessful"
+  		rm -- "$0"
 		exit 1 
 	fi
 fi
