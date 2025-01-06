@@ -169,3 +169,5 @@ if [[ "${already_installed}" == 0 ]] || [[ "${continue_setup}" == 1 ]]; then
 		exit 1 
 	fi
 fi
+
+rm -- "$0"
