@@ -1,0 +1,47 @@
+{
+  https_port <🚨Caddyport🚨> <-- <🚨УДАЛИ ЭТОТ КОММЕНТАРИЙ!!!🚨> в конфиге xray в Dest следует указать следующее: 127.0.0.1:CaddyPort (CaddyPort заменить)
+  default_bind 127.0.0.1
+  servers {
+    listener_wrappers {
+      proxy_protocol {
+        allow 127.0.0.1/32
+      }
+      tls
+    }
+  }
+  auto_https disable_redirects
+}
+https://<🚨your-domain.live🚨> {
+  @marzban expression path('/🚨ТУТ ПУТЬ ПАНЕЛИ🚨/*') || path('^/🚨ТУТ ПУТЬ ПОДПИСКИ🚨/*') || path('/api/*') || path('/docs/*') || path('/redoc/*') || path('/openapi.json/*') || path('/statics/*')
+  handle @marzban {
+    reverse_proxy 127.0.0.1:8000 <-- <🚨УДАЛИ ЭТОТ КОММЕНТАРИЙ!!!🚨> Если у тебя Marzban висит на другом порту, то замени его здесь
+  }
+  root * /var/www/caddy <-- <🚨УДАЛИ ЭТОТ КОММЕНТАРИЙ!!!🚨> В ЭТОЙ ПАПКЕ ДОЛЖЕН БЫТЬ МАСКИРОВОЧНЫЙ САЙТ (index.html обязательно, стили, скрипты и др. по необходимости)
+  file_server
+  redir /index.html /
+  log {
+    output file /var/lib/caddy/access.log {
+      roll_size 100mb
+      roll_keep 5
+    }
+  }
+}
+
+https://<🚨Your.VPS.Server.IP🚨> { 
+  tls internal
+  respond * 204
+}
+
+:80 {
+  bind 0.0.0.0
+  respond * 204
+}
+
+http://<🚨your-domain.live🚨>, http://www.<🚨your-domain.live🚨> {
+  bind 0.0.0.0
+  redir https://<🚨your-domain.live🚨>{uri} permanent
+}
+
+https://www.<🚨your-domain.live🚨> {
+  redir https://<🚨your-domain.live🚨>{uri} permanent
+}
