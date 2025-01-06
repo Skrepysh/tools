@@ -120,9 +120,9 @@ if [[ "${already_installed}" == 1 ]]; then
 	confirm "Do you want to continue warp setting up? This will delete your existing warp registration (y/n)" "n"
 	if [[ $? == 0 ]]; then
 		continue_setup=1
-  		echo -n -e "${green}Stopping warp-cli: ${plain}"
+  		echo -n -e "\n${green}Stopping warp-cli: ${plain}"
     		warp-cli --accept-tos disconnect
-		echo -n -e "\n${green}Deleting current registration: ${plain}"
+		echo -n -e "${green}Deleting current registration: ${plain}"
 		warp-cli --accept-tos registration delete
 	else 
 		echo -e "\n${green}[INF] Exiting... ${plain}"
