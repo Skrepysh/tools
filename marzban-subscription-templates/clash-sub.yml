@@ -1,0 +1,90 @@
+mixed-port: 2080
+allow-lan: false
+mode: rule
+log-level: warning
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+global-client-fingerprint: chrome
+
+{{ conf | except("proxy-groups", "port", "mode") | yaml }}
+
+profile:
+  store-selected: true
+
+dns:
+  enable: true
+  prefer-h3: true
+  use-hosts: true
+  use-system-hosts: true
+  listen: 127.0.0.1:6868
+  ipv6: false
+  enhanced-mode: redir-host
+  default-nameserver:
+    - 'tls://1.1.1.1'
+    - 'tls://1.0.0.1'
+  proxy-server-nameserver:
+    - 'tls://1.1.1.1'
+    - 'tls://1.0.0.1'
+  nameserver:
+    - 'https://cloudflare-dns.com/dns-query#PROXY'
+
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+
+tun:
+  enable: true
+  stack: mixed
+  auto-route: true
+  auto-detect-interface: true
+  dns-hijack:
+    - any:53
+  strict-route: true
+  mtu: 1500
+
+proxy-groups:
+- name: 'PROXY'
+  type: 'select'
+  url: 'http://connectivitycheck.gstatic.com/generate_204'
+  interval: 60
+  lazy: false
+  timeout: 5000
+  max-failed-times: 2
+  proxies:
+  {{ proxy_remarks | yaml | indent(2) }}
+{{ conf.get("proxy-groups", []) | yaml }}
+
+rule-providers:
+  torrent-clients:
+    type: http
+    url: 'https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/refs/heads/main/other/torrent-clients.yaml'
+    interval: 86400
+    proxy: DIRECT
+    behavior: classical
+    format: yaml
+  torrent-trackers:
+    type: http
+    url: 'https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/refs/heads/main/other/torrent-trackers.mrs'
+    interval: 86400
+    proxy: DIRECT
+    behavior: domain
+    format: mrs
+
+rules:
+  - DOMAIN-REGEX,^*.ru$,DIRECT
+  - DOMAIN-REGEX,^*.su$,DIRECT
+  - DOMAIN-REGEX,^*.xn--p1ai$,DIRECT
+  - GEOSITE,category-ru,DIRECT
+  - GEOSITE,private,DIRECT
+  - GEOIP,private,DIRECT
+  - RULE-SET,torrent-clients,DIRECT
+  - RULE-SET,torrent-trackers,DIRECT
+  - MATCH,PROXY

@@ -1,0 +1,163 @@
+{
+   "log": {
+      "disabled": false,
+      "level": "warn"
+   },
+   "dns": {
+      "servers": [
+        {
+            "tag": "dns-direct",
+            "address": "https://cloudflare-dns.com/dns-query",
+            "address_resolver": "dns-remote",
+            "strategy": "prefer_ipv4",
+            "detour": "Internet"
+        },
+        {
+            "tag": "dns-remote",
+            "address": "1.1.1.1",
+            "address_strategy": "prefer_ipv4",
+            "strategy": "prefer_ipv4",
+            "detour": "direct-out"
+        } 
+      ],
+      "rules": [
+            {
+                "outbound": "any",
+                "server": "dns-direct",
+                "disable_cache": false
+            }
+        ],
+      "strategy": "ipv4_only",
+      "independent_cache": true
+   },
+   "inbounds": [
+       {
+        "type": "tun",
+        "tag": "tun-in",
+        "interface_name": "skrepy-sh_tun0",
+        "address": [
+            "172.19.0.1/30"
+        ],
+        "mtu": 1500,
+        "auto_route": true,
+        "strict_route": true,
+        "stack": "mixed",
+        "sniff": true,
+        "sniff_override_destination": true,
+        "platform": {
+            "http_proxy": {
+                "enabled": false,
+                "server": "127.0.0.1",
+                "server_port": 2080
+            }
+        }
+       },
+       {
+        "type": "mixed",
+        "tag": "mixed-in",
+        "listen": "127.0.0.1",
+        "domain_strategy": "prefer_ipv4",
+        "listen_port": 2080,
+        "tcp_fast_open": true,
+        "sniff": true,
+        "sniff_override_destination": true
+       }
+   ],
+   "outbounds": [
+       {
+        "type": "selector",
+        "tag": "Internet",
+        "outbounds": null
+       },
+       {
+        "type": "urltest",
+        "tag": "Best Latency",
+        "outbounds": null,
+        "url": "http://connectivitycheck.gstatic.com/generate_204",
+        "interval": "5m"
+       },
+       {
+        "type": "direct",
+        "tag": "direct-out"
+       },
+       {
+        "tag": "block-out",
+        "type": "block"
+       },
+       {
+        "tag": "dns-out",
+        "type": "dns"
+       }
+   ],
+   "route": {
+    "final": "Internet",
+    "auto_detect_interface": true,
+    "override_android_vpn": true,
+    "rules": [
+        {
+            "protocol": "dns",
+            "outbound": "dns-out"
+        },
+        {
+            "protocol": "bittorrent",
+            "outbound": "direct-out"
+        },
+        {
+            "rule_set": [
+                "category-ru"
+            ],
+            "outbound": "direct-out"
+        },
+        {
+            "rule_set": [
+                "geoip-ru"
+            ],
+            "outbound": "direct-out"
+        },
+        {
+            "rule_set": [
+                "torrent-clients"
+            ],
+            "outbound": "direct-out"
+        },
+        {
+            "ip_is_private": true,
+            "outbound": "direct-out"
+        },
+        {
+            "domain_suffix": [
+                ".ru",
+                ".su",
+                ".xn--p1ai"
+            ],
+            "outbound": "direct-out"
+        }
+    ],
+    "rule_set": [
+        {
+            "type": "remote",
+            "tag": "category-ru",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ru.srs",
+            "download_detour": "direct-out",
+            "update_interval": "1d"
+        },
+        {
+            "type": "remote",
+            "tag": "geoip-ru",
+            "format": "binary",
+            "url": "https://github.com/SagerNet/sing-geoip/raw/refs/heads/rule-set/geoip-ru.srs",
+            "download_detour": "direct-out",
+            "update_interval": "1d"
+        },
+        {
+            "type": "remote",
+            "tag": "torrent-clients",
+            "format": "binary",
+            "url": "https://github.com/legiz-ru/sb-rule-sets/raw/refs/heads/main/torrent-clients.srs",
+            "download_detour": "direct-out",
+            "update_interval": "1d"
+        }
+    ]
+   }
+}
