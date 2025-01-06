@@ -117,7 +117,7 @@ fi
 
 if [[ "${already_installed}" == 1 ]]; then
 	LOGD "warp-cli is already installed"
-	confirm "Do you want to continue warp setting up? This will delete your existing warp registartion (y/n)" "n"
+	confirm "Do you want to continue warp setting up? This will delete your existing warp registration (y/n)" "n"
 	if [[ $? == 0 ]]; then
 		continue_setup=1
   		echo -n -e "\n${green}Stopping warp-cli: ${plain}"
@@ -137,7 +137,7 @@ if [[ "${already_installed}" == 0 ]] || [[ "${continue_setup}" == 1 ]]; then
 	LOGI "Checking if warp-cli is installed"
 	if [ $(command -v warp-cli) ]; then
         LOGI "Check is OK, setting up"
-        echo -n -e "${green}Regiatration: ${plain}"
+        echo -n -e "${green}Registration: ${plain}"
         warp-cli --accept-tos registration new
         echo -n -e "${green}Setting mode proxy: ${plain}"
 		warp-cli --accept-tos mode proxy
@@ -152,11 +152,11 @@ if [[ "${already_installed}" == 0 ]] || [[ "${continue_setup}" == 1 ]]; then
 	    fi
 	    echo -n -e "${green}Starting warp-cli: ${plain}"
 		warp-cli --accept-tos connect
-		LOGI "warp-cli was set up seccessfully!"
+		LOGI "warp-cli was set up successfully!"
 		LOGI "You can access socks proxy on 127.0.0.1:30000"
 		LOGE "YOU DON'T NEED TO OPEN 30000 PORT!!!"
 	else
-		LOGE "warp-cli can't be found. Looks like, the installation was unseccessful"
+		LOGE "warp-cli can't be found. Looks like, the installation was unsuccessful"
   		rm -- "$0"
 		exit 1 
 	fi
