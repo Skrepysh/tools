@@ -1,5 +1,5 @@
 # tools
-Some useful tools &lt;3
+Some useful tools and examples &lt;3
 ## 1. warp-cli (by CloudFlare) installer:
    - Run warp-cli install script:
      ```
