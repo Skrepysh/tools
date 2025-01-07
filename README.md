@@ -23,6 +23,7 @@ Some useful tools and examples &lt;3
      ```
 ## 3. MOTD by Skrepysh (for Debian and Ubuntu):
    ### MOTD Source - [here](https://github.com/Skrepysh/motd)
+   ![MOTD-Screenshot](https://github.com/Skrepysh/motd/blob/master/screenshot.png?raw=true)
    ### Installation: 
    - For Ubuntu:
    ```
