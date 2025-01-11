@@ -12,7 +12,7 @@
   auto_https disable_redirects
 }
 https://<🚨your-domain.live🚨> {
-  @marzban expression path('/🚨ТУТ ПУТЬ ПАНЕЛИ🚨/*') || path('^/🚨ТУТ ПУТЬ ПОДПИСКИ🚨/*') || path('/api/*') || path('/docs/*') || path('/redoc/*') || path('/openapi.json/*') || path('/statics/*')
+  @marzban expression path('/🚨ТУТ ПУТЬ ПАНЕЛИ🚨/*') || path('/🚨ТУТ ПУТЬ ПОДПИСКИ🚨/*') || path('/api/*') || path('/docs/*') || path('/redoc/*') || path('/openapi.json/*') || path('/statics/*')
   handle @marzban {
     reverse_proxy 127.0.0.1:8000 <-- <🚨УДАЛИ ЭТОТ КОММЕНТАРИЙ!!!🚨> Если у тебя Marzban висит на другом порту, то замени его здесь
   }
