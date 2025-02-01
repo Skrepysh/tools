@@ -11,6 +11,7 @@ Some useful tools and examples &lt;3
      ```
    - Enjoy!
 ## 2. Caddyfile example for Xray (VLESS+Reality) and Marzban panel:
+   - Install Caddy using guide from official website: [click](https://caddyserver.com/docs/install)
    - Run this command to place example Caddyfile in its place:
      ```
      sudo wget https://raw.githubusercontent.com/Skrepysh/tools/refs/heads/main/Caddyfile -qO /etc/caddy/Caddyfile && sudo nano /etc/caddy/Caddyfile
