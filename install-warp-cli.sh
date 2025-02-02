@@ -119,7 +119,7 @@ install_ubuntu() {
     LOGI "Updating repos"
     apt-get update >> /dev/null 2>&1
     LOGI "Installing warp-cli"
-    apt-get -y install cloudflare-warp >> /dev/null 2>&1
+    apt-get -y install cloudflare-warp netcat-openbsd >> /dev/null 2>&1
 }
 
 install_debian() {
@@ -140,7 +140,7 @@ install_debian() {
     LOGI "Updating repos"
     apt-get update >> /dev/null 2>&1
     LOGI "Installing warp-cli"
-    apt-get -y install cloudflare-warp >> /dev/null 2>&1
+    apt-get -y install cloudflare-warp netcat-traditional >> /dev/null 2>&1
 }
 
 install_centos() {
