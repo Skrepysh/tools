@@ -16,6 +16,7 @@ https://<🚨your-domain.live🚨> {
   handle @marzban {
     reverse_proxy 127.0.0.1:8000 <-- <🚨УДАЛИ ЭТОТ КОММЕНТАРИЙ!!!🚨> Если у тебя Marzban висит на другом порту, то замени его здесь
   }
+  header Alt-Svc h3=":443";ma=2592000
   root * /var/www/caddy <-- <🚨УДАЛИ ЭТОТ КОММЕНТАРИЙ!!!🚨> В ЭТОЙ ПАПКЕ ДОЛЖЕН БЫТЬ МАСКИРОВОЧНЫЙ САЙТ (index.html обязательно, стили, скрипты и др. по необходимости)
   file_server
   redir /index.html /
@@ -29,6 +30,7 @@ https://<🚨your-domain.live🚨> {
 
 https://<🚨Your.VPS.Server.IP🚨> { 
   tls internal
+  header Alt-Svc h3=":443";ma=2592000
   respond * 204
 }
 
@@ -43,5 +45,6 @@ http://<🚨your-domain.live🚨>, http://www.<🚨your-domain.live🚨> {
 }
 
 https://www.<🚨your-domain.live🚨> {
+  header Alt-Svc h3=":443";ma=2592000
   redir https://<🚨your-domain.live🚨>{uri} permanent
 }
